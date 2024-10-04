@@ -50,3 +50,69 @@ npm install karma-edge-launcher --save-dev
 ### Instalar Chrome en WSL
 
 En el [este blog](https://scottspence.com/posts/use-chrome-in-ubuntu-wsl) se explica como instalar Chrome en WSL.
+
+## Code Coverage
+
+Para generar un reporte de cobertura de código se debe ejecutar el siguiente comando:
+
+```bash
+ng test --no-watch --code-coverage
+```
+
+Este comando generará un reporte en la carpeta `coverage/` que se puede visualizar abriendo el archivo `index.html` en un navegador.
+
+### Focus group of tests
+
+Cuando se quiere correr solo un grupo de tests en particular se puede usar la función `fdescribe` para enfocar un test en particular.
+
+```typescript
+fdescribe('Test for Calculator', () => {});
+```
+
+### Focus a single test
+
+Para enfocar un solo test se puede usar la función `fit`.
+
+```typescript
+fit('#multiply should return nine', () => {});
+```
+
+### Skip a group of tests
+
+Para saltar un grupo de tests se puede usar la función `xdescribe`.
+
+```typescript
+xdescribe('Test for Calculator', () => {});
+```
+
+### Skip a single test
+
+Para saltar un solo test se puede usar la función `xit`.
+
+```typescript
+xit('#multiply should return nine', () => {});
+```
+
+### Cambiar porcentaje mínimo de cobertura
+
+Para cambiar el porcentaje mínimo de cobertura se debe modificar el archivo `karma.conf.js` y agregar a la propiedad `coverageReporter` el `check` con el porcentaje deseado.
+
+```javascript
+// karma.conf.js
+module.exports = function (config) {
+  config.set({
+    coverageReporter: {
+      check: {
+        global: {
+          statements: 80,
+          branches: 80,
+          functions: 80,
+          lines: 80
+        }
+      }
+    }
+  });
+};
+```
+
+De esta forma, si el porcentaje de cobertura es menor al 80% el comando `ng test` nos mostrará un error.
