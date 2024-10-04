@@ -25,3 +25,28 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+##
+
+## Karma launcher Chrome not installed
+
+Si Chrome no esta instalado, se puede usar otro navegador para correr las pruebas unitarias. Para esto se debe modificar el archivo `karma.conf.js` y cambiar el valor de `browsers` por el navegador deseado. Por ejemplo, para usar Edge se debe cambiar el valor de `browsers` a `['Edge']`.
+
+```javascript
+// karma.conf.js
+module.exports = function(config) {
+  config.set({
+    browsers: ['Edge']
+  });
+};
+```
+
+También es necesario instalar el launcher de Edge con el siguiente comando:
+
+```bash
+npm install karma-edge-launcher --save-dev
+```
+
+### Instalar Chrome en WSL
+
+En el [este blog](https://scottspence.com/posts/use-chrome-in-ubuntu-wsl) se explica como instalar Chrome en WSL.
