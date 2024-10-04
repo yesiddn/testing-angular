@@ -2,41 +2,45 @@ import { Calculator } from "./calculator";
 
 // Test unitarios con Jasmine -> https://codingpotions.com/angular-testing
 describe('Test for Calculator', () => {
-  // el # es para indicar que es un método de la clase
-  it('#multiply should return nine', () => {
-    // AAA
-    // Arrange
-    const calculator = new Calculator();
-    // Act
-    const result = calculator.multiply(3, 3);
-    // Assert
-    expect(result).toBe(9);
+  describe('Test for multiply', () => {
+    // el # es para indicar que es un método de la clase
+    it('#multiply should return nine', () => {
+      // AAA
+      // Arrange
+      const calculator = new Calculator();
+      // Act
+      const result = calculator.multiply(3, 3);
+      // Assert
+      expect(result).toBe(9);
+    });
+
+    it('#multiply should return four', () => {
+      // AAA
+      // Arrange
+      const calculator = new Calculator();
+      // Act
+      const result = calculator.multiply(2, 2);
+      // Assert
+      expect(result).toEqual(4);
+    });
   });
 
-  it('#multiply should return four', () => {
-    // AAA
-    // Arrange
-    const calculator = new Calculator();
-    // Act
-    const result = calculator.multiply(2, 2);
-    // Assert
-    expect(result).toEqual(4);
-  });
-
-  it('#divide should return some numbers', () => {
-    // AAA
-    // Arrange
-    const calculator = new Calculator();
-    // Act
-    const resultOne = calculator.divide(2, 2);
-    const resultTwo = calculator.divide(4, 2);
-    const resultThree = calculator.divide(5, 2);
-    const resultFour = calculator.divide(6, 0);
-    // Assert
-    expect(resultOne).toEqual(1);
-    expect(resultTwo).toEqual(2);
-    expect(resultThree).toEqual(2.5);
-    expect(resultFour).toBeNull();
+  describe('Test for divide', () => {
+    it('#divide should return some numbers', () => {
+      // AAA
+      // Arrange
+      const calculator = new Calculator();
+      // Act
+      const resultOne = calculator.divide(2, 2);
+      const resultTwo = calculator.divide(4, 2);
+      const resultThree = calculator.divide(5, 2);
+      const resultFour = calculator.divide(6, 0);
+      // Assert
+      expect(resultOne).toEqual(1);
+      expect(resultTwo).toEqual(2);
+      expect(resultThree).toEqual(2.5);
+      expect(resultFour).toBeNull();
+    });
   });
 
   // jasmine matchers -> https://jasmine.github.io/api/2.7/matchers.html

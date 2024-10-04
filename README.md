@@ -116,3 +116,27 @@ module.exports = function (config) {
 ```
 
 De esta forma, si el porcentaje de cobertura es menor al 80% el comando `ng test` nos mostrará un error.
+
+## Mocha reporter
+
+Mocha nos ayuda a visualizar los resultados de las pruebas unitarias de una forma más amigable. Para usar Mocha se debe instalar el paquete `karma-mocha-reporter` con el siguiente comando:
+
+```bash
+npm install karma-mocha-reporter --save-dev
+```
+
+Luego se debe modificar el archivo `karma.conf.js` y agregar el reporter de Mocha.
+
+```javascript
+// karma.conf.js
+module.exports = function(config) {
+  config.set({
+    plugins: [
+      require('karma-mocha-reporter')
+    ],
+    reporters: ['mocha']
+  });
+};
+```
+
+Y ya se puede correr las pruebas unitarias con el comando `ng test` y ver los resultados en la consola.
