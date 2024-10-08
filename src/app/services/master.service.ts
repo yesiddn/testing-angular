@@ -10,4 +10,8 @@ export class MasterService {
   getValue() {
     return this.valueService.value;
   }
+
+  getValueTwo() {
+    return this.valueService.getValue();
+  }
 }

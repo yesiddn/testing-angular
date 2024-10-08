@@ -17,6 +17,10 @@ export class ValueService {
     this._value = value;
   }
 
+  getValue() {
+    return this._value;
+  }
+
   getPromiseValue() {
     return Promise.resolve('promise value');
   }
