@@ -1,12 +1,18 @@
 // import { TestBed } from '@angular/core/testing';
 
+import { TestBed } from '@angular/core/testing';
 import { ValueService } from './value.service';
 
 describe('ValueService', () => {
   let service: ValueService;
 
   beforeEach(() => {
-    service = new ValueService(); // instanciar el servicio antes de cada test
+    TestBed.configureTestingModule({
+      providers: [ValueService] // se puede incluir servicios, componentes, pipes, etc. en el array de providers
+    }); // de esta forma se configura el modulo de testing para el servicio ValueService y de esta forma se puede usar el patron singleton de angular para instanciar el servicio
+
+    // service = new ValueService(); // instanciar el servicio antes de cada test
+    service = TestBed.inject(ValueService); // ya no es necesario instanciar el servicio, se inyecta el servicio desde el modulo de testing
   });
 
   it('should be created', () => {
