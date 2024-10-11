@@ -3,9 +3,9 @@ import { ProductService } from "./product.service";
 import { HttpClientModule, provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { Product } from "../models/product.mode";
-import { generateManyProducts } from "../models/product.mock";
+import { generateManyProducts, generateOneProduct } from "../models/product.mock";
 
-fdescribe('ProductService', () => {
+describe('ProductService', () => {
   let productService: ProductService;
   let httpTestController: HttpTestingController;
 
@@ -44,6 +44,49 @@ fdescribe('ProductService', () => {
       req.flush(mockProducts); // se responde con los productos mockeados
 
       httpTestController.verify(); // verifica que no haya mas peticiones pendientes y que se hayan respondido todas
+    });
+  });
+
+  describe('tests for getAllProducts', () => {
+    it('should return a product list', () => {
+      // Arrange
+      const mockProducts: Product[] = generateManyProducts(2);
+
+      // Act
+      productService.getAllProducts().subscribe((products) => {
+        // Assert
+        expect(products.length).toEqual(mockProducts.length);
+      });
+
+      // http config
+      const req = httpTestController.expectOne('https://api.escuelajs.co/api/v1/products'); // se espera una peticion a esa url
+      req.flush(mockProducts); // se responde con los productos mockeados
+
+      httpTestController.verify(); // verifica que no haya mas peticiones pendientes y que se hayan respondido todas
+    });
+
+    it('should reutrn product list with taxes', () => {
+      const mockProducts: Product[] = [
+        {
+          ...generateOneProduct(),
+          price: 100,
+        },
+        {
+          ...generateOneProduct(),
+          price: 200,
+        }
+      ];
+
+      productService.getAllProducts().subscribe((products) => {
+        expect(products.length).toEqual(mockProducts.length);
+        expect(products[0].taxes).toEqual(19);
+        expect(products[1].taxes).toEqual(38);
+      });
+
+      const req = httpTestController.expectOne('https://api.escuelajs.co/api/v1/products');
+      req.flush(mockProducts);
+
+      httpTestController.verify();
     });
   });
 });
