@@ -3,6 +3,7 @@ import { ProductService } from "./product.service";
 import { HttpClientModule, provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { Product } from "../models/product.mode";
+import { generateManyProducts } from "../models/product.mock";
 
 fdescribe('ProductService', () => {
   let productService: ProductService;
@@ -29,24 +30,11 @@ fdescribe('ProductService', () => {
   describe('tests for getProductsSimple', () => {
     it('should return a product list', () => {
       // Arrange
-      const mockProducts: Product[] = [
-        {
-          id: 1,
-          title: 'Product 1',
-          price: 100,
-          description: 'Description 1',
-          images: ['image1.jpg'],
-          category: {
-            id: 1,
-            name: 'Category 1',
-            image: 'category1.jpg',
-          },
-          createdAt: '2021-01-01',
-        },
-      ];
+      const mockProducts: Product[] = generateManyProducts(2);
 
       // Act
       productService.getProductsSimple().subscribe((products) => {
+        // Assert
         expect(products.length).toEqual(mockProducts.length);
         expect(products).toEqual(mockProducts);
       });
