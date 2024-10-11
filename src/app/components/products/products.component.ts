@@ -19,7 +19,7 @@ export class ProductsComponent {
   }
 
   getAllProducts() {
-    this.productService.getProducts().subscribe({
+    this.productService.getProductsByCategory().subscribe({
       next: (products) => {
         console.log('Products:', products);
         this.products = products;

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Product } from '../models/product.mode';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,18 @@ export class ProductService {
     return this.http.get<Product[]>('https://api.escuelajs.co/api/v1/products');
   }
 
-  getProducts(category_id?: string) {
+  // hay que poner el tipo de retorno de forma explicita ya que con las modificaciones que se hicieron en el map, el tipo de retorno no es el mismo que el de la peticion
+  getAllProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>('https://api.escuelajs.co/api/v1/products')
+      .pipe(
+        map(products => products.map(product => ({
+          ...product,
+          taxes: 0.19 * product.price,
+        })))
+      );
+  }
+
+  getProductsByCategory(category_id?: string) {
     const url = new URL('https://api.escuelajs.co/api/v1/products');
     if (category_id) {
       url.searchParams.set('categoryId', category_id);
