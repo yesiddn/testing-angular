@@ -8,4 +8,5 @@ export interface Product {
   images: string[];
   createdAt: string;
   category: Category;
+  taxes?: number;
 }
