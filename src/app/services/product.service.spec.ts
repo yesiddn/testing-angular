@@ -2,10 +2,10 @@ import { TestBed } from "@angular/core/testing";
 import { ProductService } from "./product.service";
 import { HttpClientModule, provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
-import { Product } from "../models/product.model";
+import { CreateProductDTO, Product } from "../models/product.model";
 import { generateManyProducts, generateOneProduct } from "../models/product.mock";
 
-fdescribe('ProductService', () => {
+describe('ProductService', () => {
   let productService: ProductService;
   let httpTestController: HttpTestingController;
 
@@ -21,6 +21,10 @@ fdescribe('ProductService', () => {
 
     httpTestController = TestBed.inject(HttpTestingController);
     productService = TestBed.inject(ProductService);
+  });
+
+  afterEach(() => {
+    httpTestController.verify();
   });
 
   it('should be created', () => {
@@ -43,7 +47,7 @@ fdescribe('ProductService', () => {
       const req = httpTestController.expectOne('https://api.escuelajs.co/api/v1/products'); // se espera una peticion a esa url
       req.flush(mockProducts); // se responde con los productos mockeados
 
-      httpTestController.verify(); // verifica que no haya mas peticiones pendientes y que se hayan respondido todas
+      // httpTestController.verify(); // verifica que no haya mas peticiones pendientes y que se hayan respondido todas
     });
   });
 
@@ -62,7 +66,7 @@ fdescribe('ProductService', () => {
       const req = httpTestController.expectOne('https://api.escuelajs.co/api/v1/products'); // se espera una peticion a esa url
       req.flush(mockProducts); // se responde con los productos mockeados
 
-      httpTestController.verify(); // verifica que no haya mas peticiones pendientes y que se hayan respondido todas
+      // httpTestController.verify(); // verifica que no haya mas peticiones pendientes y que se hayan respondido todas
     });
 
     it('should reutrn product list with taxes', () => {
@@ -96,7 +100,7 @@ fdescribe('ProductService', () => {
       const req = httpTestController.expectOne('https://api.escuelajs.co/api/v1/products');
       req.flush(mockProducts);
 
-      httpTestController.verify();
+      // httpTestController.verify();
     });
 
     it('should send query params with limit 10 and offset 3', () => {
@@ -118,7 +122,42 @@ fdescribe('ProductService', () => {
       expect(params.get('limit')).toEqual(limit.toString());
       expect(params.get('offset')).toEqual(offset.toString());
 
-      httpTestController.verify();
+      // httpTestController.verify();
+    });
+  });
+
+  describe('tests for create product', () => {
+    it('should create a product', (doneFn) => {
+      // Arrange
+      const mockProduct: Product = generateOneProduct();
+      const productDto: CreateProductDTO = {
+        title: mockProduct.title,
+        description: mockProduct.description,
+        price: mockProduct.price,
+        images: mockProduct.images,
+        categoryId: mockProduct.category.id,
+      }
+
+      // Act
+      productService.create({...productDto}).subscribe({
+        next: (createdProduct) => {
+          // Assert
+          expect(createdProduct).toEqual(mockProduct);
+          doneFn();
+        },
+        error: (error) => {
+          doneFn.fail(error);
+        }
+      });
+
+      // http config
+      const req = httpTestController.expectOne('https://api.escuelajs.co/api/v1/products');
+      req.flush(mockProduct);
+
+      expect(req.request.body).toEqual(productDto);
+      expect(req.request.method).toEqual('POST');
+
+      // httpTestController.verify();
     });
   });
 });
