@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Product } from '../models/product.mode';
 import { map, Observable } from 'rxjs';
@@ -16,12 +16,17 @@ export class ProductService {
   }
 
   // hay que poner el tipo de retorno de forma explicita ya que con las modificaciones que se hicieron en el map, el tipo de retorno no es el mismo que el de la peticion
-  getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>('https://api.escuelajs.co/api/v1/products')
+  getAllProducts(limit?: number, offset?: number): Observable<Product[]> {
+    let params = new HttpParams();
+    if (limit && offset) {
+      params = params.set('limit', limit.toString());
+      params = params.set('offset', offset.toString());
+    }
+    return this.http.get<Product[]>('https://api.escuelajs.co/api/v1/products', { params })
       .pipe(
         map(products => products.map(product => ({
           ...product,
-          taxes: 0.19 * product.price,
+          taxes: product.price > 0 ? 0.19 * product.price : 0,
         })))
       );
   }
