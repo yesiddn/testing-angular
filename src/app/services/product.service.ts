@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Product } from '../models/product.model';
+import { CreateProductDTO, Product } from '../models/product.model';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -76,5 +76,8 @@ export class ProductService {
     return cleanedImage;
   }
 
-  create(product: )
+  create(product: CreateProductDTO) {
+    // product.title = 'New product'; // esta mutacion se puede evitar si se usa el utility type Readonly y tambien se puede testear que lo que se envia como argumento pase igual a la petición
+    return this.http.post<Product>('https://api.escuelajs.co/api/v1/products', product);
+  }
 }
