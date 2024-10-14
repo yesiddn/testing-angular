@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Product } from '../models/product.mode';
+import { Product } from '../models/product.model';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -75,4 +75,6 @@ export class ProductService {
     }
     return cleanedImage;
   }
+
+  create(product: )
 }

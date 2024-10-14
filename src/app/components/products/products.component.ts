@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ProductService } from '../../services/product.service';
-import { Product } from '../../models/product.mode';
+import { Product } from '../../models/product.model';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({

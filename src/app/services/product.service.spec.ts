@@ -2,7 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { ProductService } from "./product.service";
 import { HttpClientModule, provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
-import { Product } from "../models/product.mode";
+import { Product } from "../models/product.model";
 import { generateManyProducts, generateOneProduct } from "../models/product.mock";
 
 fdescribe('ProductService', () => {
