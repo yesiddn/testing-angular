@@ -161,7 +161,7 @@ describe('ProductService', () => {
     });
   });
 
-  fdescribe('tests for update product', () => {
+  describe('tests for update product', () => {
     it('should update a product', (doneFn) => {
       // Arrange
       const mockData: Product = generateOneProduct();
@@ -189,6 +189,32 @@ describe('ProductService', () => {
 
       expect(req.request.body).toEqual(productDto);
       expect(req.request.method).toEqual('PUT');
+    });
+  });
+
+  describe('tests for detele product', () => {
+    it('should delete a product', (doneFn) => {
+      // Arrange
+      const mockData = true;
+      const productId = 1;
+
+      // Act
+      productService.delete(productId).subscribe({
+        next: (deleted) => {
+          // Assert
+          expect(deleted).toEqual(mockData);
+          doneFn();
+        },
+        error: (error) => {
+          doneFn.fail(error);
+        }
+      });
+
+      // http config
+      const req = httpTestController.expectOne(`https://api.escuelajs.co/api/v1/products/${productId}`);
+      req.flush(mockData);
+
+      expect(req.request.method).toEqual('DELETE');
     });
   });
 });
