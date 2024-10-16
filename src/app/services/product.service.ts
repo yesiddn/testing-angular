@@ -84,4 +84,8 @@ export class ProductService {
   update(id: number, product: UpdateProductDTO) {
     return this.http.put<Product>(`https://api.escuelajs.co/api/v1/products/${id}`, product);
   }
+
+  delete(id: number) {
+    return this.http.delete<boolean>(`https://api.escuelajs.co/api/v1/products/${id}`);
+  }
 }
