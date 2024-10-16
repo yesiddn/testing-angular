@@ -2,7 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { ProductService } from "./product.service";
 import { HttpClientModule, provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
-import { CreateProductDTO, Product } from "../models/product.model";
+import { CreateProductDTO, Product, UpdateProductDTO } from "../models/product.model";
 import { generateManyProducts, generateOneProduct } from "../models/product.mock";
 
 describe('ProductService', () => {
@@ -158,6 +158,37 @@ describe('ProductService', () => {
       expect(req.request.method).toEqual('POST');
 
       // httpTestController.verify();
+    });
+  });
+
+  fdescribe('tests for update product', () => {
+    it('should update a product', (doneFn) => {
+      // Arrange
+      const mockData: Product = generateOneProduct();
+      const productDto: UpdateProductDTO = {
+        title: 'New Product Title',
+        description: 'New Product Description',
+      }
+      const productId = mockData.id;
+
+      // Act
+      productService.update(productId, {...productDto}).subscribe({
+        next: (updatedProduct) => {
+          // Assert
+          expect(updatedProduct).toEqual(mockData);
+          doneFn();
+        },
+        error: (error) => {
+          doneFn.fail(error);
+        }
+      });
+
+      // http config
+      const req = httpTestController.expectOne(`https://api.escuelajs.co/api/v1/products/${productId}`);
+      req.flush(mockData);
+
+      expect(req.request.body).toEqual(productDto);
+      expect(req.request.method).toEqual('PUT');
     });
   });
 });
