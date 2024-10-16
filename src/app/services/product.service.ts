@@ -1,7 +1,7 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CreateProductDTO, Product, UpdateProductDTO } from '../models/product.model';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -50,7 +50,7 @@ export class ProductService {
       );
   }
 
-  getOne(id: string) {
+  getOne(id: number) {
     return this.http
       .get<Product>(`https://api.escuelajs.co/api/v1/products/${id}`)
       .pipe(
@@ -61,6 +61,19 @@ export class ProductService {
               this.cleanAndParseImageUrl(image)
             ),
           };
+        }),
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === HttpStatusCode.Conflict) {
+            return throwError(() => 'Algo esta fallando en el server');
+          }
+          if (error.status === HttpStatusCode.NotFound) {
+            return throwError(() => 'No se encontro el producto');
+          }
+          if (error.status === HttpStatusCode.Unauthorized) {
+            return throwError(() => 'No autorizado');
+          }
+
+          return throwError(() => 'Ups algo salio mal');
         })
       );
   }
