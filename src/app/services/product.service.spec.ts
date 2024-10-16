@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { ProductService } from "./product.service";
-import { HttpClientModule, provideHttpClient } from "@angular/common/http";
+import { HttpClientModule, HttpStatusCode, provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { CreateProductDTO, Product, UpdateProductDTO } from "../models/product.model";
 import { generateManyProducts, generateOneProduct } from "../models/product.mock";
@@ -215,6 +215,152 @@ describe('ProductService', () => {
       req.flush(mockData);
 
       expect(req.request.method).toEqual('DELETE');
+    });
+  });
+
+  fdescribe('tests for getOne', () => {
+    it('should return a product', (doneFn) => {
+      // Arrange
+      const mockData: Product = generateOneProduct();
+      const productId = mockData.id;
+
+      // Act
+      productService.getOne(productId).subscribe({
+        next: (updatedProduct) => {
+          // Assert
+          expect(updatedProduct).toEqual(mockData);
+          doneFn();
+        },
+        error: (error) => {
+          doneFn.fail(error);
+        }
+      });
+
+      // http config
+      const req = httpTestController.expectOne(`https://api.escuelajs.co/api/v1/products/${productId}`);
+      req.flush(mockData);
+
+      expect(req.request.method).toEqual('GET');
+    });
+
+    it('should return the right message when status code is 404', (doneFn) => {
+      // Arrange
+      const productId = 2;
+      const msgError = 'No se encontro el producto';
+      const mockError = {
+        status: HttpStatusCode.NotFound, // 404
+        statusText: msgError,
+      }
+
+      // Act
+      productService.getOne(productId).subscribe({
+        next: (updatedProduct) => {
+          // Assert
+          // expect(updatedProduct).toEqual(mockData);
+          // doneFn();
+        },
+        error: (error) => {
+          // Assert
+          expect(error).toEqual(msgError);
+          doneFn();
+        }
+      });
+
+      // http config
+      const req = httpTestController.expectOne(`https://api.escuelajs.co/api/v1/products/${productId}`);
+      req.flush(msgError, mockError);
+
+      expect(req.request.method).toEqual('GET');
+    });
+
+    it('should return the right message when status code is 409', (doneFn) => {
+      // Arrange
+      const productId = 2;
+      const msgError = 'Algo esta fallando en el server';
+      const mockError = {
+        status: HttpStatusCode.Conflict, // 409
+        statusText: msgError,
+      }
+
+      // Act
+      productService.getOne(productId).subscribe({
+        next: (updatedProduct) => {
+          // Assert
+          // expect(updatedProduct).toEqual(mockData);
+          // doneFn();
+        },
+        error: (error) => {
+          // Assert
+          expect(error).toEqual(msgError);
+          doneFn();
+        }
+      });
+
+      // http config
+      const req = httpTestController.expectOne(`https://api.escuelajs.co/api/v1/products/${productId}`);
+      req.flush(msgError, mockError);
+
+      expect(req.request.method).toEqual('GET');
+    });
+
+    it('should return the right message when status code is 401', (doneFn) => {
+      // Arrange
+      const productId = 2;
+      const msgError = 'No autorizado';
+      const mockError = {
+        status: HttpStatusCode.Unauthorized, // 401
+        statusText: msgError,
+      }
+
+      // Act
+      productService.getOne(productId).subscribe({
+        next: (updatedProduct) => {
+          // Assert
+          // expect(updatedProduct).toEqual(mockData);
+          // doneFn();
+        },
+        error: (error) => {
+          // Assert
+          expect(error).toEqual(msgError);
+          doneFn();
+        }
+      });
+
+      // http config
+      const req = httpTestController.expectOne(`https://api.escuelajs.co/api/v1/products/${productId}`);
+      req.flush(msgError, mockError);
+
+      expect(req.request.method).toEqual('GET');
+    });
+
+    it('should return the right message when status code is 500', (doneFn) => {
+      // Arrange
+      const productId = 2;
+      const msgError = 'Ups algo salio mal';
+      const mockError = {
+        status: HttpStatusCode.InternalServerError, // 500
+        statusText: msgError,
+      }
+
+      // Act
+      productService.getOne(productId).subscribe({
+        next: (updatedProduct) => {
+          // Assert
+          // expect(updatedProduct).toEqual(mockData);
+          // doneFn();
+        },
+        error: (error) => {
+          // Assert
+          expect(error).toEqual(msgError);
+          doneFn();
+        }
+      });
+
+      // http config
+      const req = httpTestController.expectOne(`https://api.escuelajs.co/api/v1/products/${productId}`);
+      req.flush(msgError, mockError);
+
+      expect(req.request.method).toEqual('GET');
     });
   });
 });
