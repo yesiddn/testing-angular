@@ -1,26 +1,37 @@
 import { TestBed } from "@angular/core/testing";
 import { ProductService } from "./product.service";
-import { HttpClientModule, HttpStatusCode, provideHttpClient } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpStatusCode, provideHttpClient, withInterceptors, withInterceptorsFromDi } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { CreateProductDTO, Product, UpdateProductDTO } from "../models/product.model";
 import { generateManyProducts, generateOneProduct } from "../models/product.mock";
+import { TokenInterceptor } from "../interceptor/tokent.interceptor";
+import { TokenService } from "./token.service";
 
 describe('ProductService', () => {
   let productService: ProductService;
   let httpTestController: HttpTestingController;
+  let tokenService: TokenService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule], // sin el import de HttpClient, el test falla, pero hay un modulo de testing que se llama HttpClientTestingModule
+      // imports: [HttpClientModule], // sin el import de HttpClient, el test falla, pero hay un modulo de testing que se llama HttpClientTestingModule
       // https://angular.dev/guide/http/testing
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withInterceptorsFromDi()), // usando withInterceptorsFromDi() para seguir usando clases como interceptors
         provideHttpClientTesting(),
+        ProductService,
+        TokenService, // tambien se puede crear un spy
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: TokenInterceptor,
+          multi: true,
+        }
       ]
     });
 
     httpTestController = TestBed.inject(HttpTestingController);
     productService = TestBed.inject(ProductService);
+    tokenService = TestBed.inject(TokenService);
   });
 
   afterEach(() => {
@@ -52,9 +63,10 @@ describe('ProductService', () => {
   });
 
   describe('tests for getAllProducts', () => {
-    it('should return a product list', () => {
+    fit('should return a product list', () => {
       // Arrange
       const mockProducts: Product[] = generateManyProducts(2);
+      spyOn(tokenService, 'getToken').and.returnValue('token.123'); // de esta forma se espia un solo metodo de un servicio
 
       // Act
       productService.getAllProducts().subscribe((products) => {
@@ -64,6 +76,10 @@ describe('ProductService', () => {
 
       // http config
       const req = httpTestController.expectOne('https://api.escuelajs.co/api/v1/products'); // se espera una peticion a esa url
+
+      const headers = req.request.headers; // se obtienen los headers de la peticion
+      expect(headers.get('Authorization')).toEqual('Bearer token.123'); // se espera que el token sea el que se espia
+
       req.flush(mockProducts); // se responde con los productos mockeados
 
       // httpTestController.verify(); // verifica que no haya mas peticiones pendientes y que se hayan respondido todas

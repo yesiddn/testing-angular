@@ -140,3 +140,7 @@ module.exports = function(config) {
 ```
 
 Y ya se puede correr las pruebas unitarias con el comando `ng test` y ver los resultados en la consola.
+
+## Test interceptor
+
+![Provider para test de interceptors](./public/test-interceptor.png)
