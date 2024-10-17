@@ -63,7 +63,7 @@ describe('ProductService', () => {
   });
 
   describe('tests for getAllProducts', () => {
-    fit('should return a product list', () => {
+    it('should return a product list', () => {
       // Arrange
       const mockProducts: Product[] = generateManyProducts(2);
       spyOn(tokenService, 'getToken').and.returnValue('token.123'); // de esta forma se espia un solo metodo de un servicio
@@ -234,7 +234,7 @@ describe('ProductService', () => {
     });
   });
 
-  fdescribe('tests for getOne', () => {
+  describe('tests for getOne', () => {
     it('should return a product', (doneFn) => {
       // Arrange
       const mockData: Product = generateOneProduct();
