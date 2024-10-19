@@ -45,6 +45,26 @@ module.exports = function (config) {
     // reporters: ['progress', 'kjhtml'],
     reporters: ['mocha'],
     browsers: ['Edge'],
+    customLaunchers: {
+      ChromeHeadlessCI: {
+        base: 'ChromeHeadless',
+        flags: [
+          '--headless',
+          '--disable-gpu',
+          '--no-sandbox',
+          '--remote-debugging-port=9222'
+        ]
+      },
+      EdgeHeadlessCI: {
+        base: 'ChromiumEdge',
+        flags: [
+          '--headless',
+          '--disable-gpu',
+          '--no-sandbox',
+          '--remote-debugging-port=9222'
+        ]
+      }
+    },
     restartOnFileChange: true
   });
 };
