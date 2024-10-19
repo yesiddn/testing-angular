@@ -1,0 +1,25 @@
+name: CI for Angular
+# cada vez que se haga un push a la rama master se ejecutara el flujo de trabajo
+on: push
+jobs:
+  unit-test:
+    # donde se ejecutara el flujo de trabajo
+    runs-on: ubuntu-latest
+    # pasos que se ejecutaran
+    steps:
+      # clone the repository
+      - name: clone
+        uses: actions/checkout@v3
+      # install node
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+      # install dependencies
+      - name: install dependencies
+        # run: npm install
+        # para servidores CI se recomienda usar npm ci
+        run: npm ci
+      # run tests
+      - name: run tests
+        run: npm test -- --no-watch --code-coverage --browsers=ChromeHeadlessCI
