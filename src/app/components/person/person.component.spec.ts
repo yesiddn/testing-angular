@@ -3,8 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PersonComponent } from './person.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { Person } from '../../models/person.model';
 
-describe('PersonComponent', () => {
+fdescribe('PersonComponent', () => {
   let component: PersonComponent;
   let fixture: ComponentFixture<PersonComponent>; // ambiente para poder interactuar con el componente
 
@@ -23,17 +24,39 @@ describe('PersonComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have a <p> with "Soy un parrafo"', () => {
-    const personElement: HTMLElement = fixture.nativeElement; // elemento que se esta renderizando
-    const p = personElement.querySelector('p');
-    expect(p?.textContent).toBe('Soy un parrafo');
+  it('should the name be "Duvan"', () => {
+    component.person = new Person('Duvan', 'Yesid', 19, 51, 1.7);
+    expect(component.person.name).toBe('Duvan');
   });
 
-  it('should have a <h3> with "Hola, PersonComponent"', () => {
+  it('should have a <h3> with "Hola, {{ persone.name }}"', () => {
+    // Arrange
+    component.person = new Person('Valentina', 'Gonzalez', 25, 60, 1.65);
+    const expectMsg = `Hola, ${component.person.name}`;
+
     const personDebug: DebugElement = fixture.debugElement; // con debugElement se puede ser agnostico a la plataforma en caso de que se haga SSR, por ejemplo
     const personElement: HTMLElement = personDebug.nativeElement; // ahora si se obtiene el elemento
     const h3 = personElement.querySelector('h3'); // se pueden hacer querys en caso de que la plataforma lo permita, nativeScript si lo permite
-    expect(h3?.textContent).toBe('Hola, PersonComponent');
+
+    // Act
+    fixture.detectChanges(); // se debe llamar cada que cambiemos alguna propiedad del componente
+
+    // Assert
+    expect(h3?.textContent).toBe(expectMsg);
+  });
+
+  it('should have a <p> with "{{ person.age }}"', () => {
+    // Arrange
+    component.person = new Person('Duvan', 'Yesid', 19, 51, 1.7);
+
+    const personElement: HTMLElement = fixture.nativeElement; // elemento que se esta renderizando
+    const p = personElement.querySelector('p');
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    expect(p?.textContent).toContain(component.person.age); // de esta forma validamos que tenga la edad correcta y no el mensaje completo ya que este puede tener pequeñas variaciones que pueden llevar a error
   });
 
   it('should have a <span> with "By.css"', () => {
