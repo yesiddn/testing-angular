@@ -99,4 +99,24 @@ fdescribe('PersonComponent', () => {
     // Assert
     expect(component.imc).toContain(expectedIMC);
   });
+
+  it('should raise selected event when clicked', () => {
+    // Arrange
+    let selectedPerson: Person = new Person('Carlos', 'Perez', 25, 70, 1.75);
+    component.person = selectedPerson;
+    const buttonDe = fixture.debugElement.query(By.css('button.btn-choose'));
+
+    let selectedPersonResult: Person | undefined;
+    component.onSelected.subscribe({
+      next: (person: Person) => selectedPersonResult = person,
+      error: () => {},
+    })
+
+    // Act
+    buttonDe.triggerEventHandler('click', null);
+    fixture.detectChanges();
+
+    // Assert
+    expect(selectedPersonResult).toBe(selectedPerson);
+  });
 });
