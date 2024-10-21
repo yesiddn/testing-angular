@@ -66,4 +66,37 @@ fdescribe('PersonComponent', () => {
     const spanElement: HTMLElement = spanDebug.nativeElement;
     expect(spanElement?.textContent).toBe('By.css');
   });
+
+  it('should display a text with IMC when call calcIMC', () => {
+    // Arrange
+    const expectedIMC = 'normal';
+    component.person = new Person('Duvan', 'Yesid', 19, 51, 1.7);
+    const button: HTMLElement = fixture.debugElement.query(By.css('button.btn-imc')).nativeElement;
+
+    // Act
+    component.calcIMC();
+    fixture.detectChanges();
+
+    // Assert
+    expect(component.imc).toContain(expectedIMC);
+  });
+
+  it('should display a text with IMC when do click in the button', () => {
+    // Arrange
+    const expectedIMC = 'normal';
+    component.person = new Person('Duvan', 'Yesid', 19, 51, 1.7);
+    const buttonDebug = fixture.debugElement.query(By.css('button.btn-imc'));
+    const buttonElement = buttonDebug.nativeElement;
+
+    // Act -> Click: https://angular.dev/guide/testing/components-scenarios#clicking
+    // al debugElement se le puede llamar el metodo triggerEventHandler para simular un evento
+    // buttonDebug.triggerEventHandler('click', null); // se puede pasar un evento, pero en este caso no es necesario
+
+    // al nativeElement se le puede llamar el metodo click para simular un evento
+    buttonElement.click();
+    fixture.detectChanges();
+
+    // Assert
+    expect(component.imc).toContain(expectedIMC);
+  });
 });
