@@ -1,5 +1,6 @@
-<section class="container">
-  <h3>Hola, {{ person.name }}</h3>
-  <p>Mi edad es {{ person.age }}</p>
+<h3>Hola, {{ person.name }}</h3>
+<p>Mi edad es {{ person.age }}</p>
+<div>
   <span>By.css</span>
-</section>
+</div>
+<button class="btn-imc" (click)="calcIMC()">IMC: {{ imc }}</button>
