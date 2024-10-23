@@ -138,7 +138,7 @@ class HostComponent {
   }
 }
 
-fdescribe('PersonComponent from HostComponent', () => {
+describe('PersonComponent from HostComponent', () => {
   let component: HostComponent;
   let fixture: ComponentFixture<HostComponent>; // ambiente para poder interactuar con el componente
 
