@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
-import { CurrencyPipe } from '@angular/common';
+import { ProductComponent } from '../product/product.component';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CurrencyPipe],
+  imports: [ProductComponent],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
@@ -19,7 +19,7 @@ export class ProductsComponent {
   }
 
   getAllProducts() {
-    this.productService.getProductsByCategory().subscribe({
+    this.productService.getAllProducts().subscribe({
       next: (products) => {
         console.log('Products:', products);
         this.products = products;

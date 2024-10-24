@@ -3,12 +3,7 @@
 
   <div class="products-list">
     @for (product of products; track product.id) {
-      <figure>
-        <img [src]="product.images[0]" alt="">
-        <figcaption>
-          {{ product.title }} - {{ product.price | currency }}
-        </figcaption>
-      </figure>
+      <app-product [product]="product"></app-product>
     }
   </div>
 </section>
