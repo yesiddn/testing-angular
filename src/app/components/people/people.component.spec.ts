@@ -38,4 +38,25 @@ fdescribe('PeopleComponent', () => {
 
     expect(debugElement.length).toBe(3);
   });
+
+  it('should raise selected event when clicked', () => {
+    const buttonDebug = fixture.debugElement.query(By.css('app-person .btn-choose'));
+
+    buttonDebug.triggerEventHandler('click', null);
+    fixture.detectChanges();
+
+    expect(component.selectedPerson).toBe(component.people[0]);
+  });
+
+  it('should render the selectedPeron', () => {
+    const buttonDebug = fixture.debugElement.query(By.css('app-person .btn-choose'));
+
+    buttonDebug.triggerEventHandler('click', null);
+    fixture.detectChanges();
+
+    const liDebug = fixture.debugElement.query(By.css('.selectedPerson ul > li'));
+
+    expect(component.selectedPerson).toBe(component.people[0]);
+    expect(liDebug.nativeElement.textContent).toContain(component.selectedPerson?.name);
+  });
 });
