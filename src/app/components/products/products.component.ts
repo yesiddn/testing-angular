@@ -21,7 +21,6 @@ export class ProductsComponent {
   getAllProducts() {
     this.productService.getAllProducts().subscribe({
       next: (products) => {
-        console.log('Products:', products);
         this.products = products;
       },
       error: (error) => {
