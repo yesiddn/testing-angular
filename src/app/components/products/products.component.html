@@ -3,7 +3,15 @@
 
   <div class="products-list">
     @for (product of products; track product.id) {
-      <app-product [product]="product"></app-product>
+    <app-product [product]="product"></app-product>
     }
   </div>
+
+  <button [disabled]="status === 'loading'" (click)="getAllProducts()">
+    @if(status === 'init') {
+    <span>Loading...</span>
+    } @else {
+    <span>Load more</span>
+    }
+  </button>
 </section>

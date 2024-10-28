@@ -13,19 +13,26 @@ import { ProductComponent } from '../product/product.component';
 export class ProductsComponent {
   private productService = inject(ProductService);
   products: Product[] = [];
+  limit = 10;
+  offset = 0;
+  status: 'loading' | 'success' | 'error' | 'init' = 'init';
 
   ngOnInit() {
+    console.log(this.status === 'init');
     this.getAllProducts();
   }
 
   getAllProducts() {
-    this.productService.getAllProducts().subscribe({
+    this.status = 'loading';
+    this.productService.getAllProducts(this.limit, this.offset).subscribe({
       next: (products) => {
         this.products = products;
+        this.offset += this.limit;
+        this.status = 'success';
       },
       error: (error) => {
         console.error('Error:', error);
       }
-    })
+    });
   }
 }
