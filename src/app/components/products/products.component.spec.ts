@@ -23,21 +23,36 @@ fdescribe('ProductsComponent', () => {
         }
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ProductsComponent);
     component = fixture.componentInstance;
 
     productService = TestBed.inject(ProductService) as jasmine.SpyObj<ProductService>; // se obtiene el servicio como un spy
-  });
-
-  it('should create', () => {
     const productsMock = generateManyProducts(3);
     productService.getAllProducts.and.returnValue(of(productsMock)); // se configura el spy para que retorne un valor específico
 
     fixture.detectChanges(); // se ejecuta el ngOnInit
+  });
 
+  it('should create', () => {
     expect(component).toBeTruthy();
     expect(productService.getAllProducts).toHaveBeenCalled();
+  });
+
+  describe('tests for getAllProducts', () => {
+    it('should return product list from service', () => {
+      // Arrange
+      const productsMock = generateManyProducts(3);
+      productService.getAllProducts.and.returnValue(of(productsMock));
+
+      // Act
+      component.getAllProducts();
+      fixture.detectChanges();
+
+      // Assert
+      // TODO: tests for render products
+      expect(component.products.length).toBe(productsMock.length);
+    });
   });
 });
