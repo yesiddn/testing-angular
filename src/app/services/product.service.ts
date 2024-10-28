@@ -18,7 +18,7 @@ export class ProductService {
   // hay que poner el tipo de retorno de forma explicita ya que con las modificaciones que se hicieron en el map, el tipo de retorno no es el mismo que el de la peticion
   getAllProducts(limit?: number, offset?: number): Observable<Product[]> {
     let params = new HttpParams();
-    if (limit && offset) {
+    if (limit && offset !== undefined) {
       params = params.set('limit', limit.toString());
       params = params.set('offset', offset.toString());
     }
