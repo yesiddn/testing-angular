@@ -5,14 +5,17 @@ import { ProductComponent } from '../product/product.component';
 import { ProductService } from '../../services/product.service';
 import { generateManyProducts } from '../../models/product.mock';
 import { defer, of } from 'rxjs';
+import { ValueService } from '../../services/value.service';
 
 fdescribe('ProductsComponent', () => {
   let component: ProductsComponent;
   let fixture: ComponentFixture<ProductsComponent>;
   let productService: jasmine.SpyObj<ProductService>
+  let valueService: jasmine.SpyObj<ValueService>;
 
   beforeEach(async () => {
     const productServiceSpy = jasmine.createSpyObj('ProductService', ['getAllProducts']);
+    const valueServiceSpy = jasmine.createSpyObj('ValueService', ['getPromiseValue']);
 
     await TestBed.configureTestingModule({
       imports: [ProductsComponent, ProductComponent],
@@ -29,6 +32,7 @@ fdescribe('ProductsComponent', () => {
     component = fixture.componentInstance;
 
     productService = TestBed.inject(ProductService) as jasmine.SpyObj<ProductService>; // se obtiene el servicio como un spy
+    valueService = TestBed.inject(ValueService) as jasmine.SpyObj<ValueService>;
     const productsMock = generateManyProducts(3);
     productService.getAllProducts.and.returnValue(of(productsMock)); // se configura el spy para que retorne un valor específico
 
@@ -73,5 +77,22 @@ fdescribe('ProductsComponent', () => {
       // Assert
       expect(component.status).toBe('success');
     }));
+  });
+
+  describe('tests for callPromise', () => {
+    it('should call to promise', async () => {
+      // Arrange
+      const mockMsg = 'promise value';
+      valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMsg));
+
+      // Act
+      // con promesar se puede usar async/await o fakeAsync/tick
+      await component.callPromise();
+      fixture.detectChanges();
+
+      // Assert
+      expect(component.promiseResponse).toBe(mockMsg);
+      expect(valueService.getPromiseValue).toHaveBeenCalled();
+    });
   });
 });
