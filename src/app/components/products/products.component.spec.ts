@@ -1,10 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { ProductsComponent } from './products.component';
 import { ProductComponent } from '../product/product.component';
 import { ProductService } from '../../services/product.service';
 import { generateManyProducts } from '../../models/product.mock';
-import { of } from 'rxjs';
+import { defer, of } from 'rxjs';
 
 fdescribe('ProductsComponent', () => {
   let component: ProductsComponent;
@@ -45,6 +45,7 @@ fdescribe('ProductsComponent', () => {
       // Arrange
       const productsMock = generateManyProducts(3);
       productService.getAllProducts.and.returnValue(of(productsMock));
+      const prevCount = component.products.length;
 
       // Act
       component.getAllProducts();
@@ -52,7 +53,25 @@ fdescribe('ProductsComponent', () => {
 
       // Assert
       // TODO: tests for render products
-      expect(component.products.length).toBe(productsMock.length);
+      expect(component.products.length).toBe(productsMock.length + prevCount);
     });
+
+    it('should change the status "loading" => "success"', fakeAsync(() => { // se usa fakeAsync para poder controlar el tiempo de ejecución
+      // Arrange
+      const productsMock = generateManyProducts(10);
+      productService.getAllProducts.and.returnValue(defer(() => Promise.resolve(productsMock))); // defer es una función que emula un tipo de asincronía de forma que tarda en devolver la respuesta
+
+      // Act
+      component.getAllProducts();
+      fixture.detectChanges();
+
+      expect(component.status).toBe('loading');
+
+      tick(); // se ejecuta todo el código asincrónico que este pendiente -> obs, promise, setTimeout
+      // tick(4000); // se puede pasar un tiempo en milisegundos para simular un tiempo de espera
+      fixture.detectChanges(); // despues del tick se debe ejecutar el detectChanges para que se actualice la vista
+      // Assert
+      expect(component.status).toBe('success');
+    }));
   });
 });

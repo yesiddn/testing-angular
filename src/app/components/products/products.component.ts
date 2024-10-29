@@ -18,7 +18,6 @@ export class ProductsComponent {
   status: 'loading' | 'success' | 'error' | 'init' = 'init';
 
   ngOnInit() {
-    console.log(this.status === 'init');
     this.getAllProducts();
   }
 
@@ -26,7 +25,7 @@ export class ProductsComponent {
     this.status = 'loading';
     this.productService.getAllProducts(this.limit, this.offset).subscribe({
       next: (products) => {
-        this.products = products;
+        this.products = [...this.products, ...products];
         this.offset += this.limit;
         this.status = 'success';
       },
