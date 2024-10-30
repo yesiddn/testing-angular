@@ -6,6 +6,7 @@ import { ProductService } from '../../services/product.service';
 import { generateManyProducts } from '../../models/product.mock';
 import { defer, of } from 'rxjs';
 import { ValueService } from '../../services/value.service';
+import { By } from '@angular/platform-browser';
 
 fdescribe('ProductsComponent', () => {
   let component: ProductsComponent;
@@ -23,7 +24,11 @@ fdescribe('ProductsComponent', () => {
         {
           provide: ProductService,
           useValue: productServiceSpy
-        }
+        },
+        {
+          provide: ValueService,
+          useValue: valueServiceSpy
+        },
       ]
     })
       .compileComponents();
@@ -94,5 +99,24 @@ fdescribe('ProductsComponent', () => {
       expect(component.promiseResponse).toBe(mockMsg);
       expect(valueService.getPromiseValue).toHaveBeenCalled();
     });
+
+    it('should show "promise value" in <p> when btn was clicked', fakeAsync(() => {
+      // Arrange
+      const mockMsg = 'promise value';
+      valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMsg));
+      const btnDe = fixture.debugElement.query(By.css('.btn-promise'));
+
+      // Act
+      // para este caso en el que no controlamos el tiempo de ejecución con async/await, se usa fakeAsync/tick
+      btnDe.triggerEventHandler('click', null);
+      tick();
+      fixture.detectChanges();
+      const pDe = fixture.debugElement.query(By.css('p.promise-response'));
+
+      // Assert
+      expect(component.promiseResponse).toBe(mockMsg);
+      expect(valueService.getPromiseValue).toHaveBeenCalled();
+      expect(pDe.nativeElement.textContent).toContain(mockMsg);
+    }));
   });
 });
