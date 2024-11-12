@@ -3,4 +3,8 @@
   <h5 highlight>Default color</h5>
   <h5 highlight="yellow">Yellow color</h5>
   <input type="text" name="color" [value]="color" [(ngModel)]="color" placeholder="Write a color" [highlight]="color">
+  <h3>Pipe</h3>
+  <p>{{ 'my text' | reverse }}</p>
+  <input type="text" name="pipe" [(ngModel)]="text">
+  <p>{{ text | reverse }}</p>
 </section>
