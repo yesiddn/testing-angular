@@ -7,6 +7,7 @@ import { generateManyProducts } from '../../models/product.mock';
 import { defer, of } from 'rxjs';
 import { ValueService } from '../../services/value.service';
 import { By } from '@angular/platform-browser';
+import { query, queryById } from '../../../testing';
 
 describe('ProductsComponent', () => {
   let component: ProductsComponent;
@@ -104,7 +105,9 @@ describe('ProductsComponent', () => {
       // Arrange
       const mockMsg = 'promise value';
       valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMsg));
-      const btnDe = fixture.debugElement.query(By.css('.btn-promise'));
+      // no es recomendable usar clases para obtener elementos del DOM ya que las clases pueden ser modificas o eliminadas y esto dañaria los tests, por lo que se aconseja usar propierdades
+      //const btnDe = fixture.debugElement.query(By.css('[data-testid="btn-promise"]'));
+      const btnDe = queryById(fixture, 'btn-promise'); // utility que hace lo mismo que la linea anterior
 
       // Act
       // para este caso en el que no controlamos el tiempo de ejecución con async/await, se usa fakeAsync/tick
